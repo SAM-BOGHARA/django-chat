@@ -4,14 +4,18 @@
 {% if perms.user.add_user %}
 <div class="mt-8">
   <h2 class="mb-4 text-lg">Users</h2>
-  <a href="#" class="inline-block py-2 px-6 bg-rose-600 text-white rounded-xl"
+  <a
+    href="{% url 'chat:add_user' %}"
+    class="inline-block py-2 px-6 bg-rose-600 text-white rounded-xl"
     >Add User</a
   >
 
   <div class="mt-6">
     {% for user in users %}
     <div class="grid grid-cols-4 gap-4 py-2 {% cycle 'bg-gray-100' '' %}">
-      <p class="px-2">{{user.name}}</p>
+      <p class="px-2">
+        <a href="{% url 'chat:user_detail' user.pk %}">{{user.name}}</a>
+      </p>
       <p class="px-2">{{user.email}}</p>
       <p class="px-2">{{user.get_role_display}}</p>
       <p class="px-2 text-right">
@@ -28,27 +32,7 @@
 
 <div class="mt-6">
   <h2 class="mb-4 text-lg">Rooms</h2>
-  <div class="grid grid-cols-4 gap-4">
-    {% for room in rooms %}
-    <div
-      class="p-4 rounded-xl {% if room.status == 'waiting' %}bg-emerald-100{% elif room.status == 'active' %}bg-yellow-100{% else %}bg-gray-100 {% endif %}"
-    >
-      <div class="mb-4 text-lg">Chat</div>
-      <p>
-        <b>ID: </b>{{room.uuid}} <br />
-        <b>Name: </b>{{room.client}} <br />
-        <b>Status: </b>{{room.status}} <br />
-        <b>Agent: </b> {% firstof room.agent.name 'None yet..' %} <br />
-      </p>
-
-      <a
-        href=""
-        class="mt-2 inline-block py-2 px-5 bg-emerald-800 text-white rounded-xl"
-        >Join</a
-      >
-    </div>
-    {% empty %}{% endfor %}
-  </div>
+  {% include 'chat/partials/room_list.html' %}
 </div>
 
 {% endblock %}

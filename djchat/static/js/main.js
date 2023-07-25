@@ -27,10 +27,13 @@ const chatInputElement = document.querySelector('#chat_message_input')
 const chatSubmitElement = document.querySelector('#chat_message_submit')
 
 
-
 /**
  * Functions 
  */
+
+function scrollToBottom() {
+    chatLogElement.scrollTop = chatLogElement.scrollHeight
+}
 
 function getCookie(name) {
     let cookieValue = null
@@ -122,7 +125,7 @@ function onChatMessage(data) {
             chatLogElement.innerHTML += `
                 <div class="flex w-full mt-2 space-x-3 max-w-md ml-auto justify-end">
                     <div>
-                        <div class="bg-blue-300 p-3 rounded-l-lg rounded-br-lg">
+                        <div class="bg-rose-300 p-3 rounded-l-lg rounded-br-lg">
                             <p class="text-sm">${data.message}</p>
                         </div>
                         
@@ -162,4 +165,10 @@ chatSubmitElement.onclick = (e) => {
 
     sendMessage();
     return false;
+}
+
+chatInputElement.onkeyup = function (e) {
+    if (e.keyCode == 13) {
+        sendMessage()
+    }
 }
