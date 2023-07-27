@@ -12,15 +12,28 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
         self.room_group_name = f"chat_{self.room_name}"
+        self.user = self.scope["user"]
 
         # Join the room group
         await self.get_room()
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
         await self.accept()
 
+        # Inform User
+        if self.user.is_staff:
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': "users_update",
+                },
+            )
+
     async def disconnect(self, code):
         # Leave the room
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
+
+        if not self.user.is_staff:
+            await self.set_room_closed()
 
     async def receive(self, text_data):
         # Receive message from WebSocket (Front end)
@@ -45,6 +58,19 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     "created_at": timesince(new_message.created_at),
                 },
             )
+        elif type == "update":
+            print("is update")
+            # Send update to the room
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    "type": "writing_active",
+                    "message": message,
+                    "name": name,
+                    "agent": agent,
+                    "initials": initials(name),
+                },
+            )
 
     async def chat_message(self, event):
         # Send Message to WebSocket (front end)
@@ -61,9 +87,19 @@ class ChatConsumer(AsyncWebsocketConsumer):
             )
         )
 
+    async def users_update(self, event):
+        # Send Information to Web Socket from Frontend
+        await self.send(text_data=json.dumps({"type": "users_update"}))
+
     @sync_to_async
     def get_room(self):
         self.room = Room.objects.get(uuid=self.room_name)
+
+    @sync_to_async
+    def set_room_closed(self):
+        self.room = Room.objects.get(uuid=self.room_name)
+        self.room.status = Room.CLOSED
+        self.room.save()
 
     @sync_to_async
     def create_message(self, sent_by, message, agent):

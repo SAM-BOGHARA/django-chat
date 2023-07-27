@@ -31,6 +31,10 @@ const chatSubmitElement = document.querySelector('#chat_message_submit')
  * Functions 
  */
 
+function scrollToBottom() {
+    chatLogElement.scrollTop = chatLogElement.scrollHeight
+}
+
 function getCookie(name) {
     let cookieValue = null
 
@@ -82,6 +86,7 @@ async function joinChatRoom() {
     }
 
     chatSocket.onopen = function (e) {
+        scrollToBottom()
         console.log('OnOpen')
     }
 
@@ -102,7 +107,7 @@ function sendMessage() {
 }
 
 function onChatMessage(data) {
-    if (data.type === 'chat_message') {
+    if (data.type == 'chat_message') {
         if (data.agent) {
             chatLogElement.innerHTML += `
                 <div class="flex w-full mt-2 space-x-3 max-w-md">
@@ -121,7 +126,7 @@ function onChatMessage(data) {
             chatLogElement.innerHTML += `
                 <div class="flex w-full mt-2 space-x-3 max-w-md ml-auto justify-end">
                     <div>
-                        <div class="bg-rose-300 p-3 rounded-l-lg rounded-br-lg">
+                        <div class="bg-blue-300 p-3 rounded-l-lg rounded-br-lg">
                             <p class="text-sm">${data.message}</p>
                         </div>
                         
@@ -132,7 +137,10 @@ function onChatMessage(data) {
                 </div>
             `
         }
+    } else if (data.type == 'users_update') {
+        chatLogElement.innerHTML += `<p class="mt-2>The admin/agent has joined the chat!</p>`
     }
+    scrollToBottom()
 }
 
 /**
@@ -161,4 +169,10 @@ chatSubmitElement.onclick = (e) => {
 
     sendMessage();
     return false;
+}
+
+chatInputElement.onkeyup = function (e) {
+    if (e.keyCode == 13) {
+        sendMessage()
+    }
 }

@@ -66,7 +66,7 @@ function onChatMessage(data) {
             chatLogElement.innerHTML += `
                 <div class="flex w-full mt-2 space-x-3 max-w-md ml-auto justify-end">
                     <div>
-                        <div class="bg-rose-300 p-3 rounded-l-lg rounded-br-lg">
+                        <div class="bg-blue-300 p-3 rounded-l-lg rounded-br-lg">
                             <p class="text-sm">${data.message}</p>
                         </div>
                         

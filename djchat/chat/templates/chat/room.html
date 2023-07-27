@@ -7,7 +7,7 @@
   <b>Started: </b>{{ room.created_at | timesince}} ago<br />
   <b>Status: </b>{{ room.get_status_display }}<br />
   <b>Page: </b>{{ room.url }}<br />
-  <b>Agent: </b>{% firstof room.created_by.name 'None yet...' %}<br />
+  <b>Agent: </b>{% firstof room.agent.name 'None yet...' %}<br />
 </p>
 
 <hr class="mb-6" />
@@ -30,7 +30,7 @@
 
     <div>
       <div
-        class="p-4 rounded-xl {% if message.created_by %}bg-rose-600 text-white{% else %}bg-gray-300{% endif %}"
+        class="p-4 rounded-xl {% if message.created_by %}bg-blue-600 text-white{% else %}bg-gray-300{% endif %}"
       >
         <p class="text-sm">{{message.body}}</p>
       </div>
@@ -67,9 +67,9 @@
 </button>
 
 {% endif %} {% endblock %} {% block scripts %} {% if room.status == 'active' %}
-{{ room.uuid|json_script:'room_uuid' }} {{
-request.user.name|json_script:'user_name' }} {{
-request.user.id|json_script:'user_id' }}
+{{ room.uuid|json_script:'room_uuid' }}
+{{request.user.name|json_script:'user_name' }}
+{{request.user.id|json_script:'user_id' }}
 <script src="{% static 'js/admin.js' %}"></script>
 
 {% endif %} {% endblock %}
