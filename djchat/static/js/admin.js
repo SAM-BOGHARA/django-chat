@@ -77,7 +77,7 @@ function onChatMessage(data) {
                 </div>
             `
         }
-    } else if (data.type == 'writing_active' && !data.agent) {
+    } else if (data.message == 'writing_active') {
         let tmpInfo = document.querySelector('.tmp-info')
 
         if (tmpInfo) {
