@@ -1,13 +1,13 @@
 {
     "builds": [{
-        "src": "djchat/wsgi.py",
+        "src": "jatte/wsgi.py",
         "use": "@vercel/python",
         "config": { "maxLambdaSize": "15mb", "runtime": "python3.9" }
     }],
     "routes": [
         {
             "src": "/(.*)",
-            "dest": "djchat/wsgi.py"
+            "dest": "jatte/wsgi.py"
         }
     ]
 }
