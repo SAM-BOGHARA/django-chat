@@ -12,7 +12,7 @@ import os
 from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.security.websocket import AllowedHostsOriginValidator
-from daphne import AmazingMiddleware
+
 
 
 
@@ -33,5 +33,5 @@ application = ProtocolTypeRouter(
         ),
     }
 )
-application = AmazingMiddleware(application)
+
 app = application
