@@ -72,7 +72,7 @@ async function joinChatRoom() {
         });
 
     chatSocket = new WebSocket(
-        `ws://${window.location.host}/ws/${chatRoomUuid}/`
+        `wss://${window.location.host}/ws/${chatRoomUuid}/`
     );
 
     chatSocket.onmessage = function (e) {
